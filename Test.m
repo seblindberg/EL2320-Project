@@ -51,3 +51,42 @@ runTrack(map, track);
 % subplot(2, 1, 2);
 % plot(track(3,:));
 
+%% Test MapLine equals
+
+nodeA = MapNode(2, 3);
+nodeB = MapNode(4, 5);
+nodeC = MapNode(4, 4);
+
+lineA = nodeA:nodeB;
+lineB = nodeB:nodeA;
+lineC = nodeC:nodeA;
+
+if lineA == lineA && lineA == lineB && lineA ~= lineC
+    disp('Everything is ok');
+else
+    disp('Test failed');
+end
+
+%% Test MapLine equals on vector
+
+nodeA = MapNode(2, 3);
+nodeB = MapNode(4, 5);
+nodeC = MapNode(4, 4);
+
+lineA = nodeA:nodeB;
+lines = [nodeA:nodeB nodeB:nodeA nodeC:nodeA];
+
+if (lines == lineA) == [1 1 0]
+    disp('Everything is ok');
+else
+    disp('Test failed');
+end
+
+%% Test get Map lines
+
+map = loadMap();
+map.getMapLines().plot()
+
+
+
+
