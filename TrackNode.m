@@ -29,8 +29,8 @@ classdef TrackNode < MapNode
         end
         
         function h = plot(obj)
-            h = plot(obj.position(1), obj.position(2), '*');
-            text(obj.position(1), obj.position(2), sprintf('%.1f', obj.speed), ...
+            h = plot(obj.x, obj.y, '*');
+            text(obj.x, obj.y, sprintf('%.1f', obj.speed), ...
             'VerticalAlignment','bottom', 'HorizontalAlignment','right');
         end
     end

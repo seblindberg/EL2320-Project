@@ -88,8 +88,8 @@ classdef MapLine < handle
             end
                 
             for iLine = 1:nLines
-                plot([lines(iLine).startNode.position(1) lines(iLine).endNode.position(1)], ...
-                     [lines(iLine).startNode.position(2) lines(iLine).endNode.position(2)]);
+                plot([lines(iLine).startNode.x lines(iLine).endNode.x], ...
+                     [lines(iLine).startNode.y lines(iLine).endNode.y]);
             end
             
             if ~wasHeld
@@ -104,12 +104,12 @@ classdef MapLine < handle
             
             for iLine = 1:nLines
                 fprintf('(%.1f, %.1f) --[%.1f /%.1f°]-- (%.1f, %.1f)\n', ...
-                    lines(iLine).startNode.position(1), ...
-                    lines(iLine).startNode.position(2), ...
+                    lines(iLine).startNode.x, ...
+                    lines(iLine).startNode.y, ...
                     lines(iLine).length, ...
                     lines(iLine).angle / pi * 180, ...
-                    lines(iLine).endNode.position(1), ...
-                    lines(iLine).endNode.position(2));
+                    lines(iLine).endNode.x, ...
+                    lines(iLine).endNode.y);
             end
         end
         
@@ -172,8 +172,8 @@ classdef MapLine < handle
                 nSteps) + circleFromLine.angle;
             
             
-            arc = [circleCenterNode.position(1) + cos(angles) * abs(r);
-                   circleCenterNode.position(2) + sin(angles) * abs(r);
+            arc = [circleCenterNode.x + cos(angles) * abs(r);
+                   circleCenterNode.y + sin(angles) * abs(r);
                    repmat(speed, 1, nSteps);
                    linspace(0, mod(nextLine.angle - obj.angle + pi, 2*pi) - pi, nSteps) + obj.angle];
             
@@ -217,8 +217,8 @@ classdef MapLine < handle
             
             distanceVec = (speedVec + adjustedStartSpeed) / 2 .* timeVec;
             
-            track = [(cos(obj.angle) * distanceVec + obj.startNode.position(1));
-                     (sin(obj.angle) * distanceVec + obj.startNode.position(2));
+            track = [(cos(obj.angle) * distanceVec + obj.startNode.x);
+                     (sin(obj.angle) * distanceVec + obj.startNode.y);
                      speedVec;
                      repmat(obj.angle, 1, nSteps)];
         end

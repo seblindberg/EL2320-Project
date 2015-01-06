@@ -38,14 +38,21 @@ classdef MapNode < handle
             obj.index = MapNode.getNextIndex();
         end
         
+        function xPos = x(obj)
+            xPos = obj.position(1);
+        end
+        
+        function yPos = y(obj)
+            yPos = obj.position(2);
+        end
 
         function addRelation(obj, relatedNode)
             % Add a related node
             if ~any(obj.relations == relatedNode) && obj ~= relatedNode
                 
 %                  fprintf('Adding (%.1f, %.1f) to (%.1f, %.1f)\n', ...
-%                 relatedNode.position(1), relatedNode.position(2), ...
-%                 obj.position(1), obj.position(2));
+%                 relatedNode.x, relatedNode.y, ...
+%                 obj.x, obj.y);
                 
                 obj.relations = [obj.relations relatedNode];
                 relatedNode.addRelation(obj);
@@ -145,7 +152,7 @@ classdef MapNode < handle
         
         
         function h = plot(obj)
-            h = plot(obj.position(1), obj.position(2), 'o');
+            h = plot(obj.x, obj.y, 'o');
         end
     end
 end
