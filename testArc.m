@@ -1,9 +1,9 @@
-nodeA = mapNode(3, 3);
-nodeB = mapNode(2, 2);
-nodeC = mapNode(1, 1);
+nodeA = MapNode(3, 3);
+nodeB = MapNode(2, 2);
+nodeC = MapNode(1, 1);
 
-line1 = mapLine(nodeC, nodeB);
-line2 = mapLine(nodeB, nodeA);
+line1 = MapLine(nodeC, nodeB);
+line2 = MapLine(nodeB, nodeA);
 
 clf;
 hold on;

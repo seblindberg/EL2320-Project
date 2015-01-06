@@ -1,11 +1,11 @@
-classdef mapNode < handle
+classdef MapNode < handle
     %MAPNODE Summary of this class goes here
     %   Detailed explanation goes here
     
     properties
         position % Coordinates in the global map
         index    % Node index in the map
-        relations = mapNode.empty()
+        relations = MapNode.empty()
     end
     
     methods (Static)
@@ -24,7 +24,7 @@ classdef mapNode < handle
     
     methods
         % Initializer
-        function obj = mapNode(x, y)
+        function obj = MapNode(x, y)
             if nargin == 0
                 return
             end
@@ -35,7 +35,7 @@ classdef mapNode < handle
                 obj.position = [x; y];
             end
             
-            obj.index = mapNode.getNextIndex();
+            obj.index = MapNode.getNextIndex();
         end
         
 
@@ -60,10 +60,10 @@ classdef mapNode < handle
         
         function connections = getConnections(obj)
             nRelations = size(obj.relations, 2);
-            connections = mapLine.empty(0, nRelations);
+            connections = MapLine.empty(0, nRelations);
             
             for iRelation = 1:nRelations
-                connections(iRelation) = mapLine(obj, obj.relations(iRelation));
+                connections(iRelation) = MapLine(obj, obj.relations(iRelation));
             end
         end
         
@@ -101,9 +101,9 @@ classdef mapNode < handle
         
         function newNode = plus(obj, bNode)
             if isprop(bNode, 'position')
-                newNode = mapNode(obj.position + bNode.position);
+                newNode = MapNode(obj.position + bNode.position);
             else
-                newNode = mapNode(obj.position + bNode(:));
+                newNode = MapNode(obj.position + bNode(:));
             end
         end
         
@@ -116,7 +116,7 @@ classdef mapNode < handle
         
         function ml = colon(obj, toNode)
             % Creates a map line from two map points
-            ml = mapLine(obj, toNode);
+            ml = MapLine(obj, toNode);
         end
         
         

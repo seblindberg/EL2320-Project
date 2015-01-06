@@ -3,7 +3,7 @@ classdef Map < handle
     %   Detailed explanation goes here
     
     properties
-        mapNodes = mapNode.empty
+        MapNodes = MapNode.empty
     end
     
     methods
@@ -13,7 +13,7 @@ classdef Map < handle
                 
                 % Create list of map nodes
                 for iMapVect = 1:nMapVect    
-                    obj.addNode(mapNode(mapVect(1, iMapVect), mapVect(2, iMapVect)));
+                    obj.addNode(MapNode(mapVect(1, iMapVect), mapVect(2, iMapVect)));
                 end
                 
                 if nargin > 1
@@ -21,7 +21,7 @@ classdef Map < handle
                     % Connect nodes
                     for iConnection = 1:nConnections
                         pair = connections(:,iConnection);
-                        obj.mapNodes(pair(1)).addRelation(obj.mapNodes(pair(2)));
+                        obj.MapNodes(pair(1)).addRelation(obj.MapNodes(pair(2)));
                     end
                 end
             end
@@ -29,20 +29,20 @@ classdef Map < handle
         end
         
         function addNode(obj, node)
-            if ~any(obj.mapNodes == node)
-                obj.mapNodes = [obj.mapNodes node];
+            if ~any(obj.MapNodes == node)
+                obj.MapNodes = [obj.MapNodes node];
             end
         end
         
         function node = getRandomNode(obj)
-            node = obj.mapNodes(randi([1 size(obj.mapNodes, 2)]));
+            node = obj.MapNodes(randi([1 size(obj.MapNodes, 2)]));
         end
         
         function plot(obj)
             clf;
             axis equal;
             hold on;
-            obj.mapNodes(1).plotRecursivly();
+            obj.MapNodes(1).plotRecursivly();
             hold off;
         end
     end

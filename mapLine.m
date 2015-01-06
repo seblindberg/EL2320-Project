@@ -1,4 +1,4 @@
-classdef mapLine < handle
+classdef MapLine < handle
     %MAPLINE Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -17,7 +17,7 @@ classdef mapLine < handle
     end
     
     methods
-        function obj = mapLine(startNode, endNode)
+        function obj = MapLine(startNode, endNode)
             % Constructor that accepts a start and end node
             obj.startNode = startNode;
             obj.endNode = endNode;
@@ -38,7 +38,7 @@ classdef mapLine < handle
             % Randomly pick a node connected to the end and create a new
             % line using the end node and the new node
             newEndNode = obj.endNode.getRandomRelatedNode(obj.startNode);
-            newMapLine = mapLine(obj.endNode, newEndNode);
+            newMapLine = MapLine(obj.endNode, newEndNode);
         end
         
         function position = mtimes(obj, fraction)

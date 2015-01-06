@@ -1,4 +1,4 @@
-classdef TrackNode < mapNode
+classdef TrackNode < MapNode
     %TRACKNODE Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -16,7 +16,7 @@ classdef TrackNode < mapNode
                 speed = 0.0;
             end
             
-            obj = obj@mapNode(x);
+            obj = obj@MapNode(x);
             obj.speed = speed;
         end
         

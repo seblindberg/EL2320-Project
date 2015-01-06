@@ -1,9 +1,9 @@
-% nodeA = mapNode(2, 2);
-% nodeB = mapNode(3, 1);
-% nodeC = mapNode(1, 1);
+% nodeA = MapNode(2, 2);
+% nodeB = MapNode(3, 1);
+% nodeC = MapNode(1, 1);
 % 
-% line1 = mapLine(nodeA, nodeB);
-% line2 = mapLine(nodeB, nodeC);
+% line1 = MapLine(nodeA, nodeB);
+% line2 = MapLine(nodeB, nodeC);
 % 
 % clf;
 % hold on;
