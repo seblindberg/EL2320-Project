@@ -5,7 +5,6 @@ function plotMapPoint(map, mapRelations, index, verbose)
     % Get coordinates for point
     mapPoint = map(:, index);
     
-    %plot(mapPoint(1), mapPoint(2), '.');    
     if verbose > 0
         text(mapPoint(1), mapPoint(2), num2str(index), ...
             'VerticalAlignment','bottom', 'HorizontalAlignment','right')
@@ -18,7 +17,7 @@ function plotMapPoint(map, mapRelations, index, verbose)
         for iRelation = 1:nRelations
             relationIndex = relations(iRelation);
             relationMapPoint = map(:, relationIndex);
-            
+
             plot([mapPoint(1) relationMapPoint(1)], ...
                  [mapPoint(2) relationMapPoint(2)], 'b');
             
