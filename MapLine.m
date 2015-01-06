@@ -46,6 +46,21 @@ classdef MapLine < handle
                 fraction * (obj.endNode - obj.startNode);
         end
         
+        function isequal = eq(obj, otherLine)
+            if isempty(obj)
+                isequal = false;
+            else
+                startNodes = [obj.startNode];
+                endNodes = [obj.endNode];
+                isequal = startNodes.eq(otherLine.startNode) & endNodes.eq(otherLine.endNode) ...
+                    | startNodes.eq(otherLine.endNode) & endNodes.eq(otherLine.startNode);
+            end
+        end
+        
+        function index = index(obj)
+            index = min([obj.startNode.index' obj.endNode.index']);
+        end
+        
         function position = positionFromStart(obj, distance)
             fraction = distance / obj.length;
             position = obj * fraction;
@@ -62,28 +77,47 @@ classdef MapLine < handle
                             otherLine.length/2]);
         end
         
-        function h = plot(obj)
-            h = plot([obj.startNode.position(1) obj.endNode.position(1)], ...
-                     [obj.startNode.position(2) obj.endNode.position(2)]);
+        function plot(obj)
+            nLines = size(obj, 2);
+            lines = [obj];
+            
+            wasHeld = ishold;
+            
+            if ~wasHeld
+                hold on;
+            end
+                
+            for iLine = 1:nLines
+                plot([lines(iLine).startNode.position(1) lines(iLine).endNode.position(1)], ...
+                     [lines(iLine).startNode.position(2) lines(iLine).endNode.position(2)]);
+            end
+            
+            if ~wasHeld
+                hold off;
+            end
         end
         
         
         function display(obj)
-            size(obj);
-            fprintf('(%.1f, %.1f) --[%.1f /%.1f°]-- (%.1f, %.1f)\n', ...
-                obj.startNode.position(1), ...
-                obj.startNode.position(2), ...
-                obj.length, ...
-                obj.angle / pi * 180, ...
-                obj.endNode.position(1), ...
-                obj.endNode.position(2));
+            nLines = size(obj, 2);
+            lines = [obj];
+            
+            for iLine = 1:nLines
+                fprintf('(%.1f, %.1f) --[%.1f /%.1f°]-- (%.1f, %.1f)\n', ...
+                    lines(iLine).startNode.position(1), ...
+                    lines(iLine).startNode.position(2), ...
+                    lines(iLine).length, ...
+                    lines(iLine).angle / pi * 180, ...
+                    lines(iLine).endNode.position(1), ...
+                    lines(iLine).endNode.position(2));
+            end
         end
         
         function [fromNode, toNode, arc] = arcTo(obj, nextLine)
             
             distance = obj.shortestTurnDistance(nextLine);
             
-            deltaTheta = mod(nextLine.angle - obj.angle + pi, 2*pi) - pi
+            deltaTheta = mod(nextLine.angle - obj.angle + pi, 2*pi) - pi;
             
             % Create two new nodes which will serve as beginning and end
             % points for the arc
@@ -101,7 +135,7 @@ classdef MapLine < handle
             %deltaTheta * 180 / pi
             
             % Calculate the radius of the arc
-            r = bisect.length / (2 * sin(deltaTheta / 2))
+            r = bisect.length / (2 * sin(deltaTheta / 2));
             
             alpha = (pi - deltaTheta) / 2;
 

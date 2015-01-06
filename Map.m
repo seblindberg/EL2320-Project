@@ -25,13 +25,16 @@ classdef Map < handle
                     end
                 end
             end
-            
         end
         
         function addNode(obj, node)
             if ~any(obj.MapNodes == node)
                 obj.MapNodes = [obj.MapNodes node];
             end
+        end
+        
+        function mapLines = getMapLines(obj)
+            mapLines = obj.MapNodes(1).getAllConnectedLines();
         end
         
         function node = getRandomNode(obj)
@@ -41,9 +44,7 @@ classdef Map < handle
         function plot(obj)
             clf;
             axis equal;
-            hold on;
-            obj.MapNodes(1).plotRecursivly();
-            hold off;
+            obj.getMapLines().plot();
         end
     end
     

@@ -67,6 +67,19 @@ classdef MapNode < handle
             end
         end
         
+        function mapLines = getAllConnectedLines(obj)
+            nRelations = size(obj.relations, 2);
+            mapLines = [];
+            % Go through all related nodes
+            for iRelation = 1:nRelations
+                relatedNode = obj.relations(iRelation);
+                if relatedNode.index > obj.index
+                    % Create a line and append all the related ones to a
+                    % vector beginning with it
+                    mapLines = [mapLines obj:relatedNode relatedNode.getAllConnectedLines()];
+                end
+            end
+        end
         
         function node = getRelation(obj, index)
             node = obj.relations(index);
@@ -133,20 +146,6 @@ classdef MapNode < handle
         
         function h = plot(obj)
             h = plot(obj.position(1), obj.position(2), 'o');
-        end
-        
-        
-        function h = plotRecursivly(obj)
-            nRelations = size(obj.relations, 2);
-            for iRelation = 1:nRelations
-                relatedNode = obj.relations(iRelation);
-                if relatedNode.index > obj.index
-                    plot([obj.position(1) relatedNode.position(1)], ...
-                         [obj.position(2) relatedNode.position(2)]);
-                     
-                    relatedNode.plotRecursivly();
-                end
-            end
         end
     end
 end
