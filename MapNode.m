@@ -77,10 +77,12 @@ classdef MapNode < handle
         function mapLines = getAllConnectedLines(obj)
             nRelations = size(obj.relations, 2);
             mapLines = [];
+            minIndex = obj.index;
             % Go through all related nodes
             for iRelation = 1:nRelations
                 relatedNode = obj.relations(iRelation);
                 if relatedNode.index > obj.index
+                    minIndex = relatedNode.index;
                     % Create a line and append all the related ones to a
                     % vector beginning with it
                     mapLines = [mapLines obj:relatedNode relatedNode.getAllConnectedLines()];
