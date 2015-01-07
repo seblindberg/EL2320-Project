@@ -1,8 +1,6 @@
-function [ particles ] = particleDistribution( map, connections, maxVelocity)
+function [ particles ] = particleDistribution( map, connections,M)
 
-if nargin > 2
-%randomize velocity up to given max
-end 
+
 dist = zeros(size(connections,1),1);
 for i = 1:size(connections,1);
     dist(i,:) = pdist([map(connections(i,1),:) ; map(connections(i,2),:)],'euclidean');
@@ -15,7 +13,6 @@ cdf = cumsum(dist);
 max_cdf = max(cdf);
 cdf = cdf/max_cdf;
 %Particle population size
-M = 100;
 S = zeros(2,M);
 cumulative_sum = zeros(1,M);
 
