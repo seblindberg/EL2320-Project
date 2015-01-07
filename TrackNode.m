@@ -33,6 +33,11 @@ classdef TrackNode < MapNode
             text(obj.x, obj.y, sprintf('%.1f', obj.speed), ...
             'VerticalAlignment','bottom', 'HorizontalAlignment','right');
         end
+        
+        function tl = colon(obj, toNode)
+            % Creates a track line from two map points
+            tl = TrackLine(obj, toNode);
+        end
     end
     
 end

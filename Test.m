@@ -1,33 +1,38 @@
-% nodeA = MapNode(2, 2);
-% nodeB = MapNode(3, 1);
-% nodeC = MapNode(1, 1);
-% 
-% line1 = MapLine(nodeA, nodeB);
-% line2 = MapLine(nodeB, nodeC);
-% 
-% clf;
-% hold on;
-% axis equal;
-% 
-% line1.plot();
-% line2.plot();
-% 
-% line1
-% line2
-% 
-% [from, to, arc] = line1.arcTo(line2);
-% 
-% from.plot();
-% to.plot();
-% 
-% plot(arc(1,:), arc(2,:));
+%% Test arcTo
+
+nodeA = MapNode(2, 2);
+nodeB = MapNode(3, 1);
+nodeC = MapNode(1, 1);
+
+line1 = MapLine(nodeA, nodeB);
+line2 = MapLine(nodeB, nodeC);
+
+clf;
+hold on;
+axis equal;
+
+line1.plot();
+line2.plot();
+
+line1
+line2
+
+[from, to, arc] = line1.arcTo(line2);
+
+from.plot();
+to.plot();
+
+plot(arc(1,:), arc(2,:));
+
+%% Test generateTrack
 
 map = loadMap();
 
-%map.plot();
-
 track = generateTrack(map, 20);
+
 runTrack(map, track);
+
+%%
 %plot(track(1,:), track(2,:), 'o')
 
 % nodeA = TrackNode(1, 1, 0.5);
@@ -88,5 +93,11 @@ map = loadMap();
 map.getMapLines().plot()
 
 
+%% Test Create track
+
+map = loadMap();
+track = generateTrack(map, 20);
+saveTrack(track, 'test-track');
+loadTrack('test-track');
 
 

@@ -42,11 +42,17 @@ classdef MapLine < handle
         end
         
         function position = mtimes(obj, fraction)
+            % Get any position along the line by multiplying with a scalar.
+            %   line * 0.5 will give the halfway point along the line
+            %   line * 0 = position of startNode
+            %   line * 1 = position of endNode
             position = obj.startNode.position + ...
                 fraction * (obj.endNode - obj.startNode);
         end
         
         function isequal = eq(obj, otherLine)
+            % Two lines are considered equal when their start and end nodes
+            % match exactly
             if isempty(obj)
                 isequal = false;
             else
@@ -58,6 +64,7 @@ classdef MapLine < handle
         end
         
         function index = index(obj)
+            % The line index is the same as the lowest of the two nodes
             index = min([obj.startNode.index' obj.endNode.index']);
         end
         
@@ -103,7 +110,7 @@ classdef MapLine < handle
             lines = [obj];
             
             for iLine = 1:nLines
-                fprintf('(%.1f, %.1f) --[%.1f /%.1f°]-- (%.1f, %.1f)\n', ...
+                fprintf('(%.1f, %.1f) --<%.1f /%.1f°>-- (%.1f, %.1f)\n', ...
                     lines(iLine).startNode.x, ...
                     lines(iLine).startNode.y, ...
                     lines(iLine).length, ...
@@ -113,8 +120,7 @@ classdef MapLine < handle
             end
         end
         
-        function [fromNode, toNode, arc] = arcTo(obj, nextLine)
-            
+        function [fromNode, toNode, arc] = arcTo(obj, nextLine, verbose)
             distance = obj.shortestTurnDistance(nextLine);
             
             deltaTheta = mod(nextLine.angle - obj.angle + pi, 2*pi) - pi;
@@ -196,7 +202,7 @@ classdef MapLine < handle
             obj.startNode
             time = 2 * obj.length / (obj.startNode.speed + obj.endNode.speed);
             
-            nSteps = ceil(time / obj.DELTA_T);
+            nSteps = max([round(time / obj.DELTA_T) 1]);
             
             adjustedTime = (nSteps) * obj.DELTA_T;
             roundingCorrectionFactor = time / adjustedTime;
@@ -204,8 +210,17 @@ classdef MapLine < handle
             adjustedStartSpeed = obj.startNode.speed * roundingCorrectionFactor;
             adjustedEndSpeed = obj.endNode.speed * roundingCorrectionFactor;
             
+            if nSteps == 1
+                track = [obj.startNode.x;
+                         obj.startNode.y;
+                         adjustedStartSpeed;
+                         obj.angle];
+                
+                return;
+            end
+            
             acceleration = (adjustedEndSpeed - adjustedStartSpeed) / adjustedTime;
-           
+                 
             steps = 0:(nSteps - 1);
             timeVec = steps * obj.DELTA_T;
            
