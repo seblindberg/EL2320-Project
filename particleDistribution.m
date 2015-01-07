@@ -2,6 +2,7 @@ function [ particlePosition ] = particleDistribution( map, M)
 
 
 lines = map.getMapLines;
+lines(1,1).angle
 dist = zeros(1, size(lines,2));
 for i = 1:size(dist,2);
     dist(:,i) = lines(:,i).length;
@@ -42,7 +43,7 @@ max_cdf = cdf;
 k = 1;
 l = 1;
 d = 1;
-particlePosition = zeros(2, M);
+particlePosition = zeros(3, M);
 
 
 for i = 1:M
@@ -54,7 +55,11 @@ for i = 1:M
         
         %Calculate the position of each generated particle
         for j = 1:size(normalizedProbTemp,2)
-           particlePosition(:,d) = lines(1,S(1,i)) * normalizedProbTemp(1,j);
+           particlePosition(1:2,d) = lines(1,S(1,i)) * normalizedProbTemp(1,j);
+           particlePosition(3,d) =  mod(lines(1,S(1,i)).angle,pi) + round(rand)*(pi);
+
+           
+           
            d = d+1;
         end
         
