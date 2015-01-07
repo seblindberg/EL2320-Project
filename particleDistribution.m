@@ -19,7 +19,6 @@ end
 cdf = cumsum(dist);
 max_cdf = max(cdf);
 cdf = cdf/max_cdf;
-
 S = zeros(2,M);
 cumulative_sum = zeros(1,M);
 
@@ -75,6 +74,7 @@ end
 % Particle PosY
 % 1 when a we are about to switch to another line]
 [S' norm_prob' particlePosition' changeOfLine'];
+
 
 
 
