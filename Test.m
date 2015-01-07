@@ -90,7 +90,7 @@ end
 %% Test get Map lines
 
 map = loadMap();
-map.getMapLines().plot()
+map.getMapLines()
 
 
 %% Test Create track

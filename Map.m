@@ -34,7 +34,16 @@ classdef Map < handle
         end
         
         function mapLines = getMapLines(obj)
-            mapLines = obj.MapNodes(1).getAllConnectedLines();
+            mapLines = [];
+            lines = obj.MapNodes(1).getAllConnectedLines();
+            nLines = size(lines, 2);
+            
+            for iLine = 1:nLines
+                line = lines(iLine);
+                if ~any(mapLines == line)
+                    mapLines = [mapLines line];
+                end
+            end
         end
         
         function node = getRandomNode(obj)
