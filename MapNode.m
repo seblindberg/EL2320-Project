@@ -39,11 +39,13 @@ classdef MapNode < handle
         end
         
         function xPos = x(obj)
-            xPos = obj.position(1);
+            pos = [obj.position];
+            xPos = pos(1,:);
         end
         
         function yPos = y(obj)
-            yPos = obj.position(2);
+            pos = [obj.position];
+            yPos = pos(2,:);
         end
 
         function addRelation(obj, relatedNode)

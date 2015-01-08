@@ -1,11 +1,14 @@
 function runLocalization( mapFilename, trackFilename )
 
 CAR_LENGTH = 0.1;
-ANIMATION_DELAY = 0.1;
+ANIMATION_DELAY = 0.02;
+N_PARTICLES = 1000;
 
 % Load map and track
 map = loadMap(mapFilename);
 [track, control] = loadTrack(trackFilename);
+
+mapLines = map.getMapLines();
 
 % Display map
 map.plot();
@@ -14,7 +17,7 @@ currentState = track(:, 1);
 controlState = currentState;
 
 % Initialize particles
-particles = diag([4 6 1]) * rand(3, 1000);
+particles = particleDistribution(map, N_PARTICLES);
 
 % Plot particles
 particleHandle = line('XData', particles(1,:), 'YData', particles(2,:), ...
@@ -47,13 +50,13 @@ for iTrack = 2:nTrack
         'YData', [controlState(2) (controlState(2) + CAR_LENGTH * sin(controlState(4)))]);
     
     % Update particles
-    particles = particles + randn(3, 1000) * 0.01;
+    particles = predict(particles, currentControl(1), currentControl(2), 0.1, diag([0.005 0.005 0.01]));
     
     % Weight particles
-    
+    particles = weight(mapLines, particles);
     
     % Resample particles
-    
+    particles = systematicResample(particles);
     
     % Calculate position estimate
     meanPosition = mean(particles(1:2,:), 2);

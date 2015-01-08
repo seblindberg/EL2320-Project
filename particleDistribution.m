@@ -44,7 +44,7 @@ max_cdf = cdf;
 k = 1;
 l = 1;
 d = 1;
-particlePosition = zeros(3, M);
+particlePosition = zeros(4, M);
 
 
 for i = 1:M

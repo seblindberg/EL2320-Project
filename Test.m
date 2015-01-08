@@ -119,7 +119,12 @@ toc
 map = loadMap();
 track = generateTrack(map, 20);
 saveTrack(track, 'test-track');
-loadTrack('test-track');
+runTrack(map, track);
+
+%% Test runLocalization
+
+runLocalization('test-map', 'test-track');
+
 
 %% Test particleDistribution
 

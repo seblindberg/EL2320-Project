@@ -1,6 +1,11 @@
-function  distance = weightCalculation(startP, endP, particleP)
+function  distance = weightCalculation(mapLine, particleP, verbose)
 
+if nargin < 3
+    verbose = 0;
+end
 
+startP = mapLine.startNode.position;
+endP = mapLine.endNode.position;
 
 a = [endP(1) - startP(1), endP(2) - startP(2); startP(2) - endP(2), endP(1) - startP(1)];
 
@@ -25,9 +30,6 @@ hold on
 plot([startP(1) endP(1)], [startP(2) endP(2)])
     
 %Ouput is distance to line. 
-
-
-
 
 end
 

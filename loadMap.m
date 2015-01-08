@@ -1,4 +1,4 @@
-function map = loadMap()
+function map = loadMap(filename)
 %LOADMAP Load a map and declare all relations within it
 %   Load a set of coordinates and a list of coordinate pairs and convert
 %   those into an array of ...

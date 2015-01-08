@@ -50,10 +50,28 @@ classdef Map < handle
             node = obj.MapNodes(randi([1 size(obj.MapNodes, 2)]));
         end
         
-        function plot(obj)
+        function [xMin, xMax, yMin, yMax] = getBounds(obj)
+            xMin = min(obj.MapNodes.x);
+            xMax = max(obj.MapNodes.x);
+            yMin = min(obj.MapNodes.y);
+            yMax = max(obj.MapNodes.y);
+        end
+        
+        function plot(obj, margin)
+            if nargin < 2
+                margin = 1;
+            end
             clf;
+            % Get map bounds and add a margin to them
+            [xmin, xmax, ymin, ymax] = obj.getBounds();
+            axis([xmin-margin, xmax+margin, ymin-margin, ymax+margin]);
+            
             axis equal;
+            
             obj.getMapLines().plot();
+            
+            % Freeze axis limits
+            axis manual;
         end
     end
     
