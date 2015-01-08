@@ -92,7 +92,28 @@ end
 map = loadMap();
 map.getMapLines()
 
+%% Test project point
 
+clf;
+axis equal;
+
+nodeA = MapNode(1, 1);
+nodeB = MapNode(2, 3);
+
+lineA = nodeA:nodeB;
+
+point = [0 -1; 1 2; 1 3; 3 3]';
+
+hold on;
+lineA.plot();
+plot(point(1,:), point(2,:), 'r*');
+
+pos = lineA.projectPoint(point)
+
+plot(pos(1,:), pos(2,:), 'g*');
+tic
+lineA.distanceToPoint(point)
+toc
 %% Test Create track
 
 map = loadMap();

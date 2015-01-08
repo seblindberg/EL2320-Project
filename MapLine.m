@@ -120,6 +120,70 @@ classdef MapLine < handle
             end
         end
         
+        
+        function [xMin, xMax, yMin, yMax] = getBounds(obj)
+            xValues = [obj.startNode.x obj.endNode.x];
+            yValues = [obj.startNode.y obj.endNode.y];
+            xMin = min(xValues);
+            xMax = max(xValues);
+            yMin = min(yValues);
+            yMax = max(yValues);
+        end
+        
+        
+        function position = projectPoint(obj, point)
+            vx = obj.endNode.x - obj.startNode.x;
+            vy = obj.endNode.y - obj.startNode.y;
+            
+            dx = point(1,:)' - obj.startNode.x;
+            dy = point(2,:)' - obj.startNode.y;
+            
+            tp = (dx .* vx + dy .* vy ) ./ (vx .* vx + vy .* vy);
+            
+            position = [obj.startNode.x + tp .* vx, obj.startNode.y + tp .* vy]';
+        end
+        
+        
+        function distance = distanceToPoint(obj, point)
+            positionAlongLine = obj.projectPoint(point);
+            distance = zeros(1, size(point, 2));
+            
+            % Line is not vertical
+            if obj.startNode.x ~= obj.endNode.x
+                % Separate left and right node
+                if obj.startNode.x <= obj.endNode.x
+                    pointsClosestToStartNode = positionAlongLine(1,:) < obj.startNode.x;
+                    pointsClosestToEndNode   = positionAlongLine(1,:) > obj.endNode.x;
+                else
+                    pointsClosestToStartNode = positionAlongLine(1,:) > obj.startNode.x;
+                    pointsClosestToEndNode   = positionAlongLine(1,:) < obj.endNode.x;
+                end
+                
+            else
+                % Separate top and bottom node
+                if obj.startNode.y <= obj.endNode.y
+                    pointsClosestToStartNode = positionAlongLine(2,:) < obj.startNode.y;
+                    pointsClosestToEndNode   = positionAlongLine(2,:) > obj.endNode.y;
+                else
+                    pointsClosestToStartNode = positionAlongLine(2,:) > obj.startNode.y;
+                    pointsClosestToEndNode   = positionAlongLine(2,:) < obj.endNode.y;
+                end
+            end
+            
+            pointsOnLine = ~pointsClosestToStartNode & ~pointsClosestToEndNode;
+            
+            % Calculate the different distances
+            distance(pointsOnLine) = sqrt(sum(abs(...
+                point(:,pointsOnLine) - positionAlongLine(:, pointsOnLine)).^2, 1));
+            
+            distance(pointsClosestToStartNode) = sqrt(sum(abs(...
+                bsxfun(@minus, point(:, pointsClosestToStartNode), obj.startNode.position)).^2, 1));
+            
+            distance(pointsClosestToEndNode) = sqrt(sum(abs(...
+                bsxfun(@minus, point(:, pointsClosestToEndNode), obj.endNode.position)).^2, 1));
+        end
+        
+        
         function [fromNode, toNode, arc] = arcTo(obj, nextLine, verbose)
             distance = obj.shortestTurnDistance(nextLine);
             
