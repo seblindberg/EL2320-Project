@@ -131,8 +131,8 @@ classdef MapNode < handle
         
         
         function difference = minus(obj, bNode)
-            % Calculates the difference in position
-            difference = obj.position - bNode.position;
+            % Calculates the difference in position            
+            difference = bsxfun(@minus, [obj.position], [bNode.position]);
         end
         
         

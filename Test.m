@@ -121,4 +121,12 @@ track = generateTrack(map, 20);
 saveTrack(track, 'test-track');
 loadTrack('test-track');
 
+%% Test particleDistribution
 
+map = loadMap();
+
+particles = particleDistribution(map, 100);
+
+map.plot();
+hold on;
+plot(particles(1,:), particles(2,:), '.');

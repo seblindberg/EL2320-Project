@@ -1,13 +1,14 @@
-function [ particlePosition ] = particleDistribution( map, M)
+function [ particlePosition ] = particleDistribution( map, M )
 
 
 lines = map.getMapLines;
-lines(1,1).angle
-dist = zeros(1, size(lines,2));
-for i = 1:size(dist,2);
-    dist(:,i) = lines(:,i).length;
-end
+%lines(1,1).angle
+%dist = zeros(1, size(lines,2));
+%for i = 1:size(dist,2);
+%    dist(:,i) = lines(:,i).length;
+%end
 
+dist = lines.length();
  
 % dist = zeros(size(connections,1),1);
 % for i = 1:size(connections,1);

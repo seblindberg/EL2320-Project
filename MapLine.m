@@ -25,7 +25,10 @@ classdef MapLine < handle
         
         function length = length(obj)
             % Calculate the length of the line
-            length = norm(obj.endNode - obj.startNode);
+            startNode = [obj.startNode];
+            endNode = [obj.endNode];
+                        
+            length = sqrt(sum(abs(endNode - startNode).^2, 1));
         end
         
         function angle = angle(obj)
