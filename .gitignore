@@ -1,2 +1,3 @@
 *.m~
 Tracks/*
+.DS_store

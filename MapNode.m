@@ -65,7 +65,7 @@ classdef MapNode < handle
             end
         end
         
-        
+
         function relations = getRelations(obj)
             relations = obj.relations;
         end

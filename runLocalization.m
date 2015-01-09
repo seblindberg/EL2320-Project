@@ -1,13 +1,14 @@
 function runLocalization( mapFilename, trackFilename )
 
 CAR_LENGTH = 0.1;
-ANIMATION_DELAY = 0.001;
-N_PARTICLES = 1000;
+ANIMATION_DELAY = 0.005;
+N_PARTICLES = 2000;
 
 % Load map and track
 map = loadMap(mapFilename);
 [track, control] = loadTrack(trackFilename);
 
+map.deforme(diag([0.05 0.05]));
 mapLines = map.getMapLines();
 
 % Display map
@@ -36,18 +37,23 @@ estimateHandle = line('XData',0, 'YData',0, 'Color','red', ...
 nTrack = size(track, 2);
 
 error = zeros(1, size(track, 2));
+iError = 1;
 
 for iTrack = 2:nTrack
     currentState = track(:, iTrack);
     currentControl = control(:, iTrack);
     
-    currentControl(2) = currentControl(2) + 0.01 * randn();
-    currentControl(1) = currentControl(1) + 0.1 * randn();
+    speed = currentControl(1);
+    acceleration = currentControl(2);
+    heading = currentControl(3);
     
-    controlState(4) = controlState(4) + currentControl(2);
-    controlState(1) = controlState(1) + currentControl(1) * 0.1 * cos(controlState(4));
-    controlState(2) = controlState(2) + currentControl(1) * 0.1 * sin(controlState(4));
-    controlState(3) = currentControl(1);
+    %currentControl(1) = currentControl(1) + 0.08 * randn();
+    %heading = heading + 0.03 * randn();
+    
+    controlState(4) = controlState(4) + heading;
+    controlState(1) = controlState(1) + speed * 0.1 * cos(controlState(4));
+    controlState(2) = controlState(2) + speed * 0.1 * sin(controlState(4));
+    controlState(3) = speed;
     
     % Update true state
     set(carHandle, ...
@@ -59,12 +65,12 @@ for iTrack = 2:nTrack
         'YData', [controlState(2) (controlState(2) + CAR_LENGTH * sin(controlState(4)))]);
     
     % Update particles
-    particles = predict(particles, currentControl(1), currentControl(2), 0.1, diag([0.005 0.005 0.005]));
+    particles = predict(particles, speed, heading, 0.1, diag([0.03 0.03]));
     
     % Weight particles
     [particles, likelyhood] = weight(mapLines, particles);
     
-    if likelyhood < 0.1
+    if likelyhood < 0.00005
         particles = particleDistribution(map, N_PARTICLES);
     else
         % Resample particles

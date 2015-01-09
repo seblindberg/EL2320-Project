@@ -1,5 +1,7 @@
 function [ particlePosition ] = particleDistribution( map, M )
 
+SPEED_MAX = 1.0;
+SPEED_MIN = 0.1;
 
 lines = map.getMapLines;
 %lines(1,1).angle
@@ -44,7 +46,7 @@ max_cdf = cdf;
 k = 1;
 l = 1;
 d = 1;
-particlePosition = zeros(4, M);
+particlePosition = zeros(5, M);
 
 
 for i = 1:M
@@ -59,18 +61,15 @@ for i = 1:M
            particlePosition(1:2,d) = lines(1,S(1,i)) * normalizedProbTemp(1,j);
            particlePosition(3,d) =  mod(lines(1,S(1,i)).angle,pi) + round(rand)*(pi);
 
-           
-           
            d = d+1;
         end
         
         k = i+1;
         l = l + 1; 
-
-
     end
-    
 end
+
+particlePosition(4,:) = 0.1; %rand(1, M) * (SPEED_MAX - SPEED_MIN) + SPEED_MIN;
 
 %Data print which shows the following:
 % [Connection number

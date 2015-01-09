@@ -11,12 +11,16 @@ classdef Map < handle
             if nargin > 0
                 nMapVect = size(mapVect, 2);
                 
-                % Create list of map nodes
-                for iMapVect = 1:nMapVect    
-                    obj.addNode(MapNode(mapVect(1, iMapVect), mapVect(2, iMapVect)));
-                end
-                
-                if nargin > 1
+                if nargin < 2
+                    for iMapVect = 1:nMapVect
+                        obj.addNode(mapVect(iMapVect));
+                    end
+                else
+                    % Create list of map nodes
+                    for iMapVect = 1:nMapVect    
+                        obj.addNode(MapNode(mapVect(1, iMapVect), mapVect(2, iMapVect)));
+                    end
+
                     nConnections = size(connections, 2);
                     % Connect nodes
                     for iConnection = 1:nConnections
@@ -48,6 +52,19 @@ classdef Map < handle
         
         function node = getRandomNode(obj)
             node = obj.MapNodes(randi([1 size(obj.MapNodes, 2)]));
+        end
+        
+        function deforme(obj, covariance)
+            nMapNodes = size(obj.MapNodes, 2);
+            nodePositionNoise = covariance * randn(2, nMapNodes);
+            
+            for iMapNode = 1:nMapNodes
+                mapNode = obj.MapNodes(iMapNode);
+                
+                mapNode.position = [mapNode.x + nodePositionNoise(1, iMapNode);
+                                    mapNode.y + nodePositionNoise(2, iMapNode)];
+            end
+            
         end
         
         function [xMin, xMax, yMin, yMax] = getBounds(obj)

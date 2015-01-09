@@ -7,13 +7,14 @@
 function S = systematicResample(S_bar)
 
 M = size(S_bar, 2);
+n = size(S_bar, 1) - 1;
 
 r_0 = rand() / M;
 
-S = [zeros(3, M);
+S = [zeros(n, M);
      repmat(1/M, 1, M)];
 
-CDF = cumsum(S_bar(4,:));
+CDF = cumsum(S_bar(end,:));
 
 i = 1;
 for m = 1:M
@@ -21,7 +22,7 @@ for m = 1:M
         i = i + 1;
     end
     
-    S(1:3, m) = S_bar(1:3, i);
+    S(1:n, m) = S_bar(1:n, i);
 end
 
 end

@@ -5,7 +5,7 @@ function [ track, control ] = loadTrack( filename )
 load(['Tracks/' filename]);
 
 track   = TRACK;
-control = CONTROL;
+control = calculateControlFromTrack(TRACK);
 
 end
 

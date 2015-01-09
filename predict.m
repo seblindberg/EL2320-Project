@@ -6,15 +6,18 @@ M = size(S, 2);
 
 S_omega = S(3,:) + deltaOmega;
 
-inovation = [v * deltaT * cos(S_omega);
-             v * deltaT * sin(S_omega);
-             repmat(deltaOmega, 1, M);
+noise = randn(M, 2) * R;
+
+%vNoise = S(4,:) + (a + noise(:,1))' * deltaT;
+vNoise = noise(:,1)' + v;
+
+inovation = [deltaT * vNoise .* cos(S_omega);
+             deltaT * vNoise .* sin(S_omega);
+             deltaOmega + noise(:,2)';
+             repmat(v, 1, M);
              zeros(1, M)];
          
-noise = [R * randn(3, M);
-         zeros(1, M)];
-
-S_bar = S + inovation + noise;
+S_bar = S + inovation;
      
 end
 

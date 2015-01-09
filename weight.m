@@ -26,7 +26,7 @@ minimumDistance = exp(-minimumDistance.^2 / 0.01);
 averageLikelyhood = sum(minimumDistance) / M;
 
 % Normalize weights
-S(4,:) = minimumDistance / sum(minimumDistance);
+S(end,:) = minimumDistance / sum(minimumDistance);
 
 end
 

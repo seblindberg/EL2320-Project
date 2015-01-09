@@ -11,7 +11,7 @@ classdef MapLine < handle
         DELTA_T = 0.1
         TURN_DISTANCE = 0.2
         MAX_ACCELERATION = 0.5
-        MAX_SPEED = 1
+        MAX_SPEED = 1.0
         MIN_SPEED = 0.1
         VERBOSE = 1
     end
