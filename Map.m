@@ -57,9 +57,12 @@ classdef Map < handle
             yMax = max(obj.MapNodes.y);
         end
         
-        function plot(obj, margin)
-            if nargin < 2
-                margin = 1;
+        function plot(obj, margin, color)
+            if nargin < 3
+                color = 'b';
+                if nargin < 2
+                    margin = 1;
+                end
             end
             clf;
             % Get map bounds and add a margin to them
@@ -68,7 +71,7 @@ classdef Map < handle
             
             axis equal;
             
-            obj.getMapLines().plot();
+            obj.getMapLines().plot(color);
             
             % Freeze axis limits
             axis manual;

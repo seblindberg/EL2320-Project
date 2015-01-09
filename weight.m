@@ -1,4 +1,4 @@
-function [ S ] = weight( mapLines, S )
+function [ S, averageLikelyhood ] = weight( mapLines, S )
 %WEIGHT Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -21,7 +21,10 @@ for iMapLine = 1:nMapLines
     associatedLine(distMask) = iMapLine;
 end
 
-minimumDistance = exp(-minimumDistance.^2 / 0.2);
+minimumDistance = exp(-minimumDistance.^2 / 0.01);
+
+averageLikelyhood = sum(minimumDistance) / M;
+
 % Normalize weights
 S(4,:) = minimumDistance / sum(minimumDistance);
 

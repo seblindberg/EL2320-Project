@@ -47,6 +47,10 @@ classdef MapNode < handle
             pos = [obj.position];
             yPos = pos(2,:);
         end
+        
+        function distance = distanceTo(obj, otherNode)
+            distance = sqrt(sum(abs(obj - otherNode).^2, 1));
+        end
 
         function addRelation(obj, relatedNode)
             % Add a related node
@@ -108,15 +112,14 @@ classdef MapNode < handle
             
             if nRelations > 1
                 iRelation = randi([1 (nRelations)]);
-                
-                if nargin == 2 && obj.relations(iRelation) == ignoreNode
-                    iRelation = iRelation + 1;
-                end
-                
             elseif nRelations == 1
                 iRelation = 1;
             else
                 error('Not enough relations to node');
+            end
+                
+            if nargin == 2 && obj.relations(iRelation) == ignoreNode
+                iRelation = iRelation + 1;
             end
             
             node = obj.relations(iRelation);
@@ -155,8 +158,15 @@ classdef MapNode < handle
         end
         
         
-        function h = plot(obj)
-            h = plot(obj.x, obj.y, 'o');
+        function h = plot(obj, color, symbol)
+            if nargin < 3
+                symbol = 'o';
+                if nargin < 2
+                    color = 'r';
+                end
+            end
+            
+            h = plot(obj.x, obj.y, [color symbol]);
         end
     end
 end

@@ -2,7 +2,7 @@ function runTrack( map, track )
 %RUNTRACK Summary of this function goes here
 %   Detailed explanation goes here
 
-ANIMATION_DELAY = 0.001;
+ANIMATION_DELAY = 0.0001;
 
 %h = plotMap(map, mapRelations, 1);
 map.plot();

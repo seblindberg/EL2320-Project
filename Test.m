@@ -1,23 +1,55 @@
+%% Test distanceTo
+
+nodeA = MapNode(1, 1);
+nodeB = MapNode(1, 2);
+
+nodeC = MapNode(2, 2);
+nodeD = MapNode(1, 2);
+
+nodesAB = [nodeA nodeB];
+nodesCD = [nodeC nodeD];
+
+nodesAB.distanceTo(nodesCD)
+
+%% Test getRandomConnection
+
+nodeA = MapNode(3, 3);
+nodeB = MapNode(2.6, 5);
+nodeC = MapNode(2, 5);
+
+nodeB.addRelation(nodeA);
+nodeB.addRelation(nodeC);
+
+lineAB = MapLine(nodeA, nodeB);
+lineBC = MapLine(nodeB, nodeC);
+
+clf;
+hold on;
+axis equal;
+
+lineAB.plot();
+lineBC.plot();
+
+lineAB
+line1.getRandomConnectedLine()
+
 %% Test arcTo
 
-nodeA = MapNode(2, 2);
-nodeB = MapNode(3, 1);
-nodeC = MapNode(1, 1);
+nodeA = MapNode(2.6, 5);
+nodeB = MapNode(3, 3);
+nodeC = MapNode(2, 2);
 
 line1 = MapLine(nodeA, nodeB);
-line2 = MapLine(nodeB, nodeC);
+lineBC = MapLine(nodeB, nodeC);
 
 clf;
 hold on;
 axis equal;
 
 line1.plot();
-line2.plot();
+lineBC.plot();
 
-line1
-line2
-
-[from, to, arc] = line1.arcTo(line2);
+[from, to, arc] = line1.arcTo(lineBC);
 
 from.plot();
 to.plot();
@@ -28,9 +60,22 @@ plot(arc(1,:), arc(2,:));
 
 map = loadMap();
 
-track = generateTrack(map, 20);
+track = generateTrack(map, 2, 1);
 
-runTrack(map, track);
+%runTrack(map, track);
+
+%% Test positionFromEnd
+figure(2);
+clf;
+nodeA = MapNode(3,2);
+nodeB = MapNode(2,3);
+lineAB = nodeA:nodeB;
+
+lineAB.plot();
+hold on;
+pos = lineAB.positionFromEnd(0.2);
+plot(pos(1), pos(2), 'o');
+hold off;
 
 %%
 %plot(track(1,:), track(2,:), 'o')

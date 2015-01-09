@@ -5,7 +5,6 @@ function [ track ] = generateTrack( map, trackLenght, verbose )
 %           | y        ...
 %   track = | speed    ...
 %           | heading  ...
-%           | angle    ...
 
 if nargin < 3
     verbose = 0;
@@ -33,16 +32,17 @@ nextMapLine = currentMapLine.getRandomConnectedLine();
 previousToPoint = TrackNode(startNode.position);
 
 if verbose > 0
-    clf;
-    hold on
-    axis equal;
+    map.plot(1, 'k');
+    hold on;
+    
+    startNode.plot('m', 'o');
 end
 
 for i = 1:trackLenght
 
     if verbose > 0
-        currentMapLine.plot();
-        nextMapLine.plot();
+        %currentMapLine.plot();
+        %nextMapLine.plot();
     end
 
     % Create an arc from the current line to the nex

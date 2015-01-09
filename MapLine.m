@@ -29,6 +29,7 @@ classdef MapLine < handle
             endNode = [obj.endNode];
                         
             length = sqrt(sum(abs(endNode - startNode).^2, 1));
+            %length = obj.startNode.distanceTo(obj.endNode);
         end
         
         function angle = angle(obj)
@@ -87,7 +88,10 @@ classdef MapLine < handle
                             otherLine.length/2]);
         end
         
-        function plot(obj)
+        function plot(obj, color)
+            if nargin < 2
+                color = 'b';
+            end
             nLines = size(obj, 2);
             lines = [obj];
             
@@ -99,7 +103,7 @@ classdef MapLine < handle
                 
             for iLine = 1:nLines
                 plot([lines(iLine).startNode.x lines(iLine).endNode.x], ...
-                     [lines(iLine).startNode.y lines(iLine).endNode.y]);
+                     [lines(iLine).startNode.y lines(iLine).endNode.y], color);
             end
             
             if ~wasHeld
@@ -188,6 +192,10 @@ classdef MapLine < handle
         
         
         function [fromNode, toNode, arc] = arcTo(obj, nextLine, verbose)
+            if nargin < 3
+                verbose = 0;
+            end
+            
             distance = obj.shortestTurnDistance(nextLine);
             
             deltaTheta = mod(nextLine.angle - obj.angle + pi, 2*pi) - pi;
@@ -199,8 +207,8 @@ classdef MapLine < handle
             
             % Create a line between the two points
             bisect = fromNode:toNode;
-                        
-            if deltaTheta == 0
+            
+            if abs(deltaTheta) < 1e-10
                 arc = bisect.ramp;
                 return
             end
@@ -216,7 +224,7 @@ classdef MapLine < handle
                 r * [cos(bisect.angle + alpha) sin(bisect.angle + alpha)];
             
             % Decide on what (constant) speed to use
-            v = min([max([obj.MIN_SPEED abs(r)]) obj.MAX_SPEED]);
+            v = min([max([obj.MIN_SPEED abs(r)/2]) obj.MAX_SPEED]);
             
             % Calculate the length of the arc
             arcLength = abs(r * deltaTheta);
@@ -233,7 +241,7 @@ classdef MapLine < handle
             circleFromLine = circleCenterNode:fromNode;
             circleToLine = circleCenterNode:toNode;
             
-            if obj.VERBOSE
+            if verbose > 0
                 circleCenterNode.plot();
                 circleFromLine.plot();
                 circleToLine.plot();
@@ -256,22 +264,31 @@ classdef MapLine < handle
             % Set the corrected speed for the two end nodes
             fromNode.setSpeed(speed);
             toNode.setSpeed(speed);
+            
+            if verbose > 0
+                fromNode.plot('r');
+                toNode.plot('g');
+            end
         end
         
         function track = ramp(obj)
             % Ramp with a constant acceleration from the speed of the start
             % node to that of the end node
             
+            % Return an empty track if the line has no length
             if obj.startNode == obj.endNode
+                disp('Line has no length');
                 track = zeros(4, 0);
                 return;
             end
-            obj.startNode
+            
+            % Calculate the time the ramp will take
             time = 2 * obj.length / (obj.startNode.speed + obj.endNode.speed);
-            
+            % Divide the time into discrete steps
             nSteps = max([round(time / obj.DELTA_T) 1]);
-            
+            % Adjust the ramp to the rounding error introduced
             adjustedTime = (nSteps) * obj.DELTA_T;
+            
             roundingCorrectionFactor = time / adjustedTime;
             
             adjustedStartSpeed = obj.startNode.speed * roundingCorrectionFactor;
@@ -307,36 +324,43 @@ classdef MapLine < handle
                         
         
         function track = rampUpDown(obj) 
-            
+            % Assume maximum speed to start with
             speed = obj.MAX_SPEED;
-            
+            % Calculate the time it will take to accelerate/deccelerate
+            % to/from maximum speed
             tUp = (speed - obj.startNode.speed) / obj.MAX_ACCELERATION;
             tDown = (speed - obj.endNode.speed) / obj.MAX_ACCELERATION;
             
+            % Determine the distance for the acceleration/deceleration
             rampUpDistance = obj.startNode.speed * tUp +  ...
                 obj.MAX_ACCELERATION * tUp^2;
             
             rampDownDistance = obj.endNode.speed * tDown +  ...
                 obj.MAX_ACCELERATION * tDown^2;
-                     
-            if rampUpDistance > obj.length - rampDownDistance
+            
+            % If the combined distance is longer than the entire stretch
+            if rampUpDistance + rampDownDistance > obj.length
                 rampUpDistance = rampUpDistance - (rampUpDistance - (obj.length - rampDownDistance)) / 2;
                 rampDownDistance = obj.length - rampUpDistance;
                 
-                speed = 0.5 * speed;
+                speed = 0.8 * speed;
                 
                 %tIntersect = (obj.endNode.speed - obj.startNode.speed) / (2 * obj.MAX_ACCELERATION);
             end
             
             maxNode = TrackNode(obj.positionFromStart(rampUpDistance), speed);
-            maxNode.plot();
-            
             minNode = TrackNode(obj.positionFromEnd(rampDownDistance), speed);
-            minNode.plot();
             
+            maxNode.plot('c');
+            minNode.plot('b');
+
             rampUpLine = obj.startNode:maxNode;
             constantLine = maxNode:minNode;
             rampDownLine = minNode:obj.endNode;
+            
+            rampUpLine.plot('g');
+            constantLine.plot('b');
+            rampDownLine.plot('r');
             
             track = [rampUpLine.ramp constantLine.ramp rampDownLine.ramp];
         end

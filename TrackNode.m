@@ -28,8 +28,13 @@ classdef TrackNode < MapNode
             s = obj.speed;
         end
         
-        function h = plot(obj)
-            h = plot(obj.x, obj.y, '*');
+        function h = plot(obj, color)
+            if nargin < 2
+                color = 'r';
+            end
+            
+            plot@MapNode(obj, color);
+            
             text(obj.x, obj.y, sprintf('%.1f', obj.speed), ...
             'VerticalAlignment','bottom', 'HorizontalAlignment','right');
         end
